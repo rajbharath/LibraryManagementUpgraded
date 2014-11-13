@@ -1,5 +1,7 @@
 package main.repository;
 
+import main.model.Author;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,4 +39,14 @@ public class AuthorRepo {
         return id;
     }
 
+    public Author retrieveAuthorById(Integer authorId) throws SQLException {
+        Statement statement = connection.createStatement();
+        String sql = "select name from author where id=" + authorId;
+        ResultSet resultSet = statement.executeQuery(sql);
+        Author author = null;
+        if (resultSet.next()) {
+            author = new Author(resultSet.getString("name"));
+        }
+        return author;
+    }
 }

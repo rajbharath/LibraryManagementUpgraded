@@ -1,18 +1,45 @@
 package main.model;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Book {
     private String name;
-    private Integer[] authorIds;
-    private int publisherId;
     private int noOfCopies;
+    private List<Author> authors;
+    private Publisher publisher;
 
-    public Book(String name, Integer[] authorIds, int publisherId, int noOfCopies) {
+    public Book(String name, List<Author> authors, Publisher publisher, int noOfCopies) {
         this.name = name;
-        this.authorIds = authorIds;
-        this.publisherId = publisherId;
         this.noOfCopies = noOfCopies;
+        this.authors = authors;
+        this.publisher = publisher;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "name='" + name + '\'' +
+                ", noOfCopies=" + noOfCopies +
+                ", authors=" + authors.stream().map(a -> a.getName()).collect(Collectors.joining(",")) +
+                ", publisher=" + publisher.getName() +
+                '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getNoOfCopies() {
+        return noOfCopies;
+    }
+
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
     }
 
     @Override
@@ -23,43 +50,23 @@ public class Book {
         Book book = (Book) o;
 
         if (noOfCopies != book.noOfCopies) return false;
-        if (publisherId != book.publisherId) return false;
-        if (!Arrays.equals(authorIds, book.authorIds)) return false;
-        if (!name.equals(book.name)) return false;
+        if (!authors.equals(book.authors)) return false;
 
-        return true;
+        return name.equals(book.name) && publisher.equals(book.publisher);
     }
 
     @Override
     public int hashCode() {
         int result = name.hashCode();
-        result = 31 * result + Arrays.hashCode(authorIds);
-        result = 31 * result + publisherId;
         result = 31 * result + noOfCopies;
+        result = 31 * result + authors.hashCode();
+        result = 31 * result + publisher.hashCode();
         return result;
     }
 
-    public void display() {
-        System.out.println(name);
-        System.out.println(publisherId);
-        System.out.println(authorIds.toString());
-        System.out.println(noOfCopies);
-
+    public boolean isAvailable() {
+        return getNoOfCopies() > 0;
     }
 
-    public Integer[] getAuthorIds() {
-        return authorIds;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getPublisherId() {
-        return publisherId;
-    }
-
-    public int getNoOfCopies() {
-        return noOfCopies;
-    }
 }

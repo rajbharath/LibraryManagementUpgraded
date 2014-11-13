@@ -36,7 +36,7 @@ public class UserRepo {
             if (resultSet != null && resultSet.next()) {
                 String username = resultSet.getString("username");
                 Integer[] permissionValues = (Integer[]) resultSet.getArray("permissions").getArray();
-                List<Permission> permissions = new ArrayList<Permission>();
+                List<Permission> permissions = new ArrayList<>();
                 for (Integer permissionValue : permissionValues) {
                     permissions.add(Permission.valueOf(permissionValue));
                 }

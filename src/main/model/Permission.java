@@ -6,7 +6,7 @@ import java.util.Map;
 public enum Permission {
     ADD_BOOK(1),
     REMOVE_BOOK(2),
-    ISSUE_BOOK(3),
+    BORROW_BOOK(3),
     RENEW_BOOK(4),
     RETURN_BOOK(5),
     GET_USER_STATUS(6),

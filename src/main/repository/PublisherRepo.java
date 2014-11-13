@@ -1,11 +1,13 @@
 package main.repository;
 
+import main.model.Publisher;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class PublisherRepo  {
+public class PublisherRepo {
     private final Connection connection;
 
     public PublisherRepo(BaseDataSource dataSource) throws SQLException, ClassNotFoundException {
@@ -34,5 +36,16 @@ public class PublisherRepo  {
             id = resultSet.getInt(1);
         }
         return id;
+    }
+
+    public Publisher retrieveById(int publisherId) throws SQLException {
+        Statement statement = connection.createStatement();
+        String sql = "select name from publisher where id=" + publisherId;
+        ResultSet resultSet = statement.executeQuery(sql);
+
+        if (resultSet.next()) {
+            return new Publisher(resultSet.getString("name"));
+        }
+        return null;
     }
 }

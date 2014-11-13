@@ -22,9 +22,7 @@ public class User {
 
         User user = (User) o;
 
-        if (username != null ? !username.equals(user.username) : user.username != null) return false;
-
-        return true;
+        return username != null && username.equals(user.username);
     }
 
     @Override
@@ -33,4 +31,7 @@ public class User {
     }
 
 
+    public String getUsername() {
+        return username;
+    }
 }

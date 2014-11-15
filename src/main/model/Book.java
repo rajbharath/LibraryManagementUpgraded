@@ -5,13 +5,14 @@ import java.util.stream.Collectors;
 
 public class Book {
     private String name;
-    private int noOfCopies;
+    private int issuedCount;
+    private int totalnoOfCopies;
     private List<Author> authors;
     private Publisher publisher;
 
     public Book(String name, List<Author> authors, Publisher publisher, int noOfCopies) {
         this.name = name;
-        this.noOfCopies = noOfCopies;
+        this.totalnoOfCopies = noOfCopies;
         this.authors = authors;
         this.publisher = publisher;
     }
@@ -20,7 +21,7 @@ public class Book {
     public String toString() {
         return "Book{" +
                 "name='" + name + '\'' +
-                ", noOfCopies=" + noOfCopies +
+                ", remainingCopies=" + getRemainingCount() +
                 ", authors=" + authors.stream().map(a -> a.getName()).collect(Collectors.joining(",")) +
                 ", publisher=" + publisher.getName() +
                 '}';
@@ -30,8 +31,8 @@ public class Book {
         return name;
     }
 
-    public int getNoOfCopies() {
-        return noOfCopies;
+    public int getTotalNoOfCopies() {
+        return totalnoOfCopies;
     }
 
     public List<Author> getAuthors() {
@@ -49,7 +50,7 @@ public class Book {
 
         Book book = (Book) o;
 
-        if (noOfCopies != book.noOfCopies) return false;
+        if (totalnoOfCopies != book.totalnoOfCopies) return false;
         if (!authors.equals(book.authors)) return false;
 
         return name.equals(book.name) && publisher.equals(book.publisher);
@@ -58,15 +59,28 @@ public class Book {
     @Override
     public int hashCode() {
         int result = name.hashCode();
-        result = 31 * result + noOfCopies;
+        result = 31 * result + totalnoOfCopies;
         result = 31 * result + authors.hashCode();
         result = 31 * result + publisher.hashCode();
         return result;
     }
 
     public boolean isAvailable() {
-        return getNoOfCopies() > 0;
+        return getRemainingCount() > 0;
     }
 
+    private int getRemainingCount() {
+        return totalnoOfCopies - issuedCount;
+    }
+
+    public boolean increaseIssuedCountByOne(){
+        if(isAvailable())
+            ++issuedCount;
+        return isAvailable();
+    }
+
+   public int getIssuedCount(){
+       return issuedCount;
+   }
 
 }

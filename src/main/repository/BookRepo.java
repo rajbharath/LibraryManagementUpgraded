@@ -4,10 +4,7 @@ import main.model.Author;
 import main.model.Book;
 import main.model.Publisher;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,22 +23,17 @@ public class BookRepo {
     public Book addBook(Book book) throws SQLException {
         Statement statement = connection.createStatement();
 
-        StringBuilder authorIdsSql = new StringBuilder("");
         Integer[] authorIds = populateAuthorIds(book.getAuthors());
         int publisherId = populatePublisherId(book.getPublisher());
-        for (int authorId : authorIds) {
-            authorIdsSql.append(authorId);
-            authorIdsSql.append(",");
-        }
+        String authorIdsSql = getSqlFormattedAuthorIds(authorIds);
 
-        authorIdsSql.replace(authorIdsSql.length() - 1, authorIdsSql.length(), "");
-        String sql = "insert into book(name,author_ids,publisher_id,no_of_copies) values('" + book.getName() + "',ARRAY[" + authorIdsSql + "]," + publisherId + "," + book.getNoOfCopies() + ")";
+        String sql = "insert into book(name,author_ids,publisher_id,no_of_copies) values('" + book.getName() + "',ARRAY[" + authorIdsSql + "]," + publisherId + "," + book.getTotalNoOfCopies() + ")";
         statement.executeUpdate(sql);
 
         return book;
     }
 
-     public boolean delete(Book book) throws SQLException {
+    public boolean delete(Book book) throws SQLException {
         Statement statement = connection.createStatement();
         String sql = "delete from book where name='" + book.getName() + "'";
         int returnCode = statement.executeUpdate(sql);
@@ -112,5 +104,32 @@ public class BookRepo {
         return publisherRepo.retrieveById(publisherId);
     }
 
+    public boolean save(Book book) throws SQLException {
+
+        Integer[] authorIds = populateAuthorIds(book.getAuthors());
+        int publisherId = populatePublisherId(book.getPublisher());
+        Array authorIdsSql = connection.createArrayOf("int", authorIds);
+
+
+        String sql = "update book set author_ids=? , publisher_id=?,no_of_copies=?,issued_count=?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setArray(1, authorIdsSql);
+        statement.setInt(2, publisherId);
+        statement.setInt(3, book.getTotalNoOfCopies());
+        statement.setInt(4, book.getIssuedCount());
+
+        return statement.executeUpdate() > 0;
+    }
+
+    private String getSqlFormattedAuthorIds(Integer[] authorIds) {
+
+        StringBuilder authorIdsSql = new StringBuilder("");
+        for (int authorId : authorIds) {
+            authorIdsSql.append(authorId);
+            authorIdsSql.append(",");
+        }
+        return authorIdsSql.replace(authorIdsSql.length() - 1, authorIdsSql.length(), "").toString();
+    }
 }
 

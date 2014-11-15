@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -57,25 +56,7 @@ public class EndToEndAdministrativeServiceTest {
     }
 
 
-    @Test
-    public void endToEndShouldSearchBooksByName() throws Exception {
 
-        AuthorRepo authorRepo = new AuthorRepo(baseDataSource);
-        PublisherRepo publisherRepo = new PublisherRepo(baseDataSource);
-        BookRepo bookRepo = new BookRepo(baseDataSource, publisherRepo, authorRepo);
-        AdministrativeService service = new AdministrativeService(bookRepo);
-        List<Permission> permissions = new ArrayList<>();
-        permissions.add(Permission.ADD_BOOK);
-        permissions.add(Permission.SEARCH_BY_BOOKNAME);
-        User user = new User("rajbharath", permissions);
-
-        service.addBook(user, "Refactoring II", Arrays.asList(new String[]{"Martin Fowler", "fowler"}), "Addison-Wesly", 5);
-
-        List<Book> books = service.searchBookByName("Ref");
-        List<Book> expected = new ArrayList<>();
-        expected.add(new Book("Refactoring", null, null, 0));
-        assertEquals("should retrieve Book . Expected: List of Books Got: " + books.get(0).getName(), books.get(0).getName(), expected.get(0).getName());
-    }
 
     @After
     public void tearDown() throws Exception {

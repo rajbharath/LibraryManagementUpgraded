@@ -35,7 +35,7 @@ public class EndToEndAdministrativeServiceTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        baseDataSource = new BaseDataSource();
+        baseDataSource = new BaseDataSource("org.postgresql.Driver", "jdbc:postgresql://localhost:5432/library_mgmt_upgraded", "postgres", "1");
         baseDataSource.setAutoCommit(false);
     }
 
@@ -51,12 +51,9 @@ public class EndToEndAdministrativeServiceTest {
         authors.add(new Author("Martin Fowler"));
         authors.add(new Author("fowler"));
         Book expectedBook = new Book("P EAAA", authors, new Publisher("Addison-Wesly"), 5, 0);
-        Book book = service.addBook(user, "P EAAA", Arrays.asList(new String[]{"Martin Fowler", "fowler"}), "Addison-Wesly", 5,0);
+        Book book = service.addBook(user, "P EAAA", Arrays.asList(new String[]{"Martin Fowler", "fowler"}), "Addison-Wesly", 5, 0);
         assertTrue("end To End Should Add Book With Valid Book Details failed", expectedBook.toString().equals(book.toString()));
     }
-
-
-
 
     @After
     public void tearDown() throws Exception {

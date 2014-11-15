@@ -71,7 +71,7 @@ public class BookRepo {
     }
 
     private int populatePublisherId(Publisher publisher) throws SQLException {
-        int publisherId = publisherRepo.retrieveId(publisher.getName());
+        int publisherId = publisherRepo.retrieveIdByPublisherName(publisher.getName());
         if (publisherId == -1)
             publisherId = publisherRepo.create(publisher.getName());
         return publisherId;
@@ -82,7 +82,7 @@ public class BookRepo {
         Integer[] authorIds = new Integer[authorNames.size()];
         int i = 0;
         for (String authorName : authorNames) {
-            int id = authorRepo.retrieveId(authorName);
+            int id = authorRepo.retrieveIdByAuthorName(authorName);
             if (id != -1)
                 authorIds[i] = id;
             else
@@ -102,7 +102,7 @@ public class BookRepo {
     }
 
     private Publisher populatePublisher(int publisherId) throws SQLException {
-        return publisherRepo.retrieveById(publisherId);
+        return publisherRepo.retrievePublisherById(publisherId);
     }
 
     public boolean save(Book book) throws SQLException {
@@ -110,15 +110,14 @@ public class BookRepo {
         int publisherId = populatePublisherId(book.getPublisher());
         Array authorIdsSql = connection.createArrayOf("int", authorIds);
 
-
-        String sql = "update book set author_ids=? , publisher_id=?,no_of_copies=?,issued_count=? where name=?";
+        String sql = "update book set author_ids=? , publisher_id=?,no_of_copies=?,issued_count=? where lower(name)=?";
         PreparedStatement statement = connection.prepareStatement(sql);
 
         statement.setArray(1, authorIdsSql);
         statement.setInt(2, publisherId);
         statement.setInt(3, book.getTotalNoOfCopies());
         statement.setInt(4, book.getIssuedCount());
-        statement.setString(5, book.getName());
+        statement.setString(5, book.getName().toLowerCase());
 
         return statement.executeUpdate() > 0;
     }

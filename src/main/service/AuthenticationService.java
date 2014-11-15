@@ -1,7 +1,7 @@
 package main.service;
 
-import main.repository.UserRepo;
 import main.model.User;
+import main.repository.UserRepo;
 
 import java.sql.SQLException;
 
@@ -23,7 +23,6 @@ public class AuthenticationService {
         }
         User user = userRepo.retrieve(username, password);
 
-        //TODO throw new exception for user not found
         if (user == null) throw new Exception("User not found");
 
         return user;

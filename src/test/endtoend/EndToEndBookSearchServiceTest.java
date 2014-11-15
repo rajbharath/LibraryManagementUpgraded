@@ -2,8 +2,10 @@ package test.endtoend;
 
 import main.model.Book;
 import main.model.Permission;
+import main.repository.BaseDataSource;
+import main.repository.DataSourceBuilder;
 import main.repository.RepoFactory;
-import main.service.SearchService;
+import main.service.BookSearchService;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,12 +13,13 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class EndToEndSearchServiceTest {
+public class EndToEndBookSearchServiceTest {
 
     @Test
     public void endToEndShouldSearchBooksByName() throws Exception {
-
-        SearchService service  = new SearchService(RepoFactory.getBookRepo());
+        BaseDataSource baseDataSource = DataSourceBuilder.build("org.postgresql.Driver", "jdbc:postgresql://localhost:5432/library_mgmt_upgraded", "postgres", "1");
+        RepoFactory repoFactory = new RepoFactory(baseDataSource);
+        BookSearchService service = new BookSearchService(repoFactory.getBookRepo());
         List<Permission> permissions = new ArrayList<>();
         permissions.add(Permission.ADD_BOOK);
         permissions.add(Permission.SEARCH_BY_BOOKNAME);

@@ -6,13 +6,13 @@ import java.util.stream.Collectors;
 public class Book {
     private String name;
     private int issuedCount;
-    private int totalnoOfCopies;
+    private int totalNoOfCopies;
     private List<Author> authors;
     private Publisher publisher;
 
     public Book(String name, List<Author> authors, Publisher publisher, int noOfCopies, int issuedCount) {
         this.name = name;
-        this.totalnoOfCopies = noOfCopies;
+        this.totalNoOfCopies = noOfCopies;
         this.authors = authors;
         this.publisher = publisher;
         this.issuedCount = issuedCount;
@@ -33,7 +33,7 @@ public class Book {
     }
 
     public int getTotalNoOfCopies() {
-        return totalnoOfCopies;
+        return totalNoOfCopies;
     }
 
     public List<Author> getAuthors() {
@@ -51,7 +51,7 @@ public class Book {
 
         Book book = (Book) o;
 
-        if (totalnoOfCopies != book.totalnoOfCopies) return false;
+        if (totalNoOfCopies != book.totalNoOfCopies) return false;
         if (!authors.equals(book.authors)) return false;
 
         return name.equals(book.name) && publisher.equals(book.publisher);
@@ -60,7 +60,7 @@ public class Book {
     @Override
     public int hashCode() {
         int result = name.hashCode();
-        result = 31 * result + totalnoOfCopies;
+        result = 31 * result + totalNoOfCopies;
         result = 31 * result + authors.hashCode();
         result = 31 * result + publisher.hashCode();
         return result;
@@ -71,7 +71,7 @@ public class Book {
     }
 
     private int getRemainingCount() {
-        return totalnoOfCopies - issuedCount;
+        return totalNoOfCopies - issuedCount;
     }
 
     public void increaseIssuedCountByOne() {

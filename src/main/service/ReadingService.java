@@ -9,12 +9,12 @@ import main.repository.ReadingRepo;
 import java.util.Date;
 
 
-public class ReaderService {
+public class ReadingService {
 
     private final ReadingRepo readingRepo;
 
 
-    public ReaderService(ReadingRepo readingRepo) {
+    public ReadingService(ReadingRepo readingRepo) {
         this.readingRepo = readingRepo;
     }
 

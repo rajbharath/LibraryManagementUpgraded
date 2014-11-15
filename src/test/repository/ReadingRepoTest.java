@@ -32,7 +32,7 @@ public class ReadingRepoTest {
     @Before
     public void setUp() throws Exception {
 
-        baseDataSource = new BaseDataSource();
+        baseDataSource = new BaseDataSource("org.postgresql.Driver", "jdbc:postgresql://localhost:5432/library_mgmt_upgraded", "postgres", "1");
         baseDataSource.setAutoCommit(false);
         MockitoAnnotations.initMocks(this);
     }

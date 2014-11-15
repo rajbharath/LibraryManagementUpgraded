@@ -17,7 +17,6 @@ public class UserRepo {
         connection = dataSource.getConnection();
     }
 
-    // TODO methods for different types of CRUD operations
     public User retrieve(String username, String password) {
         ResultSet resultSet = null;
         try {

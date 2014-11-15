@@ -2,6 +2,8 @@ package main;
 
 import main.model.Book;
 import main.model.User;
+import main.repository.BaseDataSource;
+import main.repository.DataSourceBuilder;
 import main.service.*;
 import main.util.IOUtil;
 
@@ -10,10 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client {
+    private DataSourceBuilder dataSourceBuilder;
     private AdministrativeService administrativeService;
     private AuthenticationService authenticationService;
-    private ReaderService readerService;
-    private SearchService searchService;
+    private ReadingService readingService;
+    private BookSearchService bookSearchService;
 
     User currentUser = null;
     Book selectedBook = null;
@@ -22,7 +25,7 @@ public class Client {
 
     Client() {
         try {
-            initializeServices();
+            initializeSetup();
             start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,7 +73,7 @@ public class Client {
                 IOUtil.println("Enter the book name");
                 String criteria = IOUtil.readString();
                 try {
-                    List<Book> books = searchService.searchBookByName(criteria);
+                    List<Book> books = bookSearchService.searchBookByName(criteria);
                     int index = 1;
                     for (Book book : books) {
                         IOUtil.println(index + " - " + book.toString());
@@ -94,14 +97,15 @@ public class Client {
                 }
                 break;
             case 3:
-                IOUtil.println("Borrow the selected book");
+
                 if (!hasSelectedBook()) {
                     IOUtil.println("To borrow any book, you need to select a book searching by its name");
                     break;
                 }
                 try {
-                    if (readerService.borrowBook(currentUser, selectedBook)) {
+                    if (readingService.borrowBook(currentUser, selectedBook)) {
                         selectedBook = null;
+                        IOUtil.println("Book has been borrowed successfully");
                     } else {
                         IOUtil.println("Processing Error..Please try again.");
                     }
@@ -111,14 +115,15 @@ public class Client {
 
                 break;
             case 4:
-                IOUtil.println("Return the selected book");
+
                 if (!hasSelectedBook()) {
                     IOUtil.println("To return any book, you need to select a book searching by its name");
                     break;
                 }
                 try {
-                    if (readerService.returnBook(currentUser, selectedBook)) {
+                    if (readingService.returnBook(currentUser, selectedBook)) {
                         selectedBook = null;
+                        IOUtil.println("Returned the selected book successfully");
                     } else {
                         IOUtil.println("Processing Error..Please try again.");
                     }
@@ -199,11 +204,13 @@ public class Client {
         IOUtil.println("7. Logout");
     }
 
-    private void initializeServices() throws SQLException, ClassNotFoundException {
-        administrativeService = ServiceManager.getAdministrativeService();
-        authenticationService = ServiceManager.getAuthenticationService();
-        readerService = ServiceManager.getReaderService();
-        searchService = ServiceManager.getSearchService();
+    private void initializeSetup() throws SQLException, ClassNotFoundException {
+        BaseDataSource baseDataSource = DataSourceBuilder.build("org.postgresql.Driver", "jdbc:postgresql://localhost:5432/library_mgmt_upgraded", "postgres", "1");
+        ServiceManager serviceManager = new ServiceManager(baseDataSource);
+        administrativeService = serviceManager.getAdministrativeService();
+        authenticationService = serviceManager.getAuthenticationService();
+        readingService = serviceManager.getReadingService();
+        bookSearchService = serviceManager.getBookSearchService();
     }
 
     private boolean isLoggedIn() {

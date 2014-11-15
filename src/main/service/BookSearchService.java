@@ -6,10 +6,10 @@ import main.repository.BookRepo;
 import java.sql.SQLException;
 import java.util.List;
 
-public class SearchService {
+public class BookSearchService {
     private BookRepo bookRepo;
 
-    public SearchService(BookRepo bookRepo) {
+    public BookSearchService(BookRepo bookRepo) {
         this.bookRepo = bookRepo;
     }
 

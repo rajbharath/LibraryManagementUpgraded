@@ -12,10 +12,6 @@ public class BaseDataSource {
     private boolean autoCommit = true;
     private Connection connection;
 
-    public BaseDataSource() {
-        this("org.postgresql.Driver", "jdbc:postgresql://localhost:5432/library_mgmt_upgraded", "postgres", "1");
-    }
-
     public BaseDataSource(String dbDriver, String dbUrl, String dbUser, String dbPassword) {
         this.dbDriver = dbDriver;
         this.dbUrl = dbUrl;

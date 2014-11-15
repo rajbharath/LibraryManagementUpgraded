@@ -28,7 +28,7 @@ public class AuthorRepo {
         return id;
     }
 
-    public int retrieveId(String authorName) throws SQLException {
+    public int retrieveIdByAuthorName(String authorName) throws SQLException {
         Statement statement = connection.createStatement();
         String sql = "select id from author where name='" + authorName + "'";
         ResultSet resultSet = statement.executeQuery(sql);

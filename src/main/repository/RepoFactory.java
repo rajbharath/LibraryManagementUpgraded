@@ -3,27 +3,27 @@ package main.repository;
 import java.sql.SQLException;
 
 public class RepoFactory {
-    private static BaseDataSource baseDataSource;
-    private static ReadingRepo readingRepo;
-    private static BookRepo bookRepo;
-    private static UserRepo userRepo;
+    private BaseDataSource baseDataSource;
+    private ReadingRepo readingRepo;
+    private BookRepo bookRepo;
+    private UserRepo userRepo;
 
-    static{
-        baseDataSource = new BaseDataSource();
+    public RepoFactory(BaseDataSource baseDataSource) {
+        this.baseDataSource = baseDataSource;
     }
 
-    public static ReadingRepo getReadingRepo() throws SQLException, ClassNotFoundException {
+    public ReadingRepo getReadingRepo() throws SQLException, ClassNotFoundException {
         if (readingRepo == null) readingRepo = new ReadingRepo(baseDataSource, getBookRepo());
         return readingRepo;
     }
 
-    public static BookRepo getBookRepo() throws SQLException, ClassNotFoundException {
+    public BookRepo getBookRepo() throws SQLException, ClassNotFoundException {
         if (bookRepo == null)
             bookRepo = new BookRepo(baseDataSource, new PublisherRepo(baseDataSource), new AuthorRepo(baseDataSource));
         return bookRepo;
     }
 
-    public static UserRepo getUserRepo() throws SQLException, ClassNotFoundException {
+    public UserRepo getUserRepo() throws SQLException, ClassNotFoundException {
         if (userRepo == null) userRepo = new UserRepo(baseDataSource);
         return userRepo;
     }

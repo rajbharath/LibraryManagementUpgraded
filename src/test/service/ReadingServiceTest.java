@@ -5,8 +5,7 @@ import main.model.Permission;
 import main.model.Reading;
 import main.model.User;
 import main.repository.ReadingRepo;
-import main.service.ReaderService;
-import org.junit.After;
+import main.service.ReadingService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -17,7 +16,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ReaderServiceTest {
+public class ReadingServiceTest {
 
     @Mock
     ReadingRepo readingRepo;
@@ -43,7 +42,7 @@ public class ReaderServiceTest {
         when(book.isAvailable()).thenReturn(true);
         when(user.isAuthorized(Permission.BORROW_BOOK)).thenReturn(true);
         when(readingRepo.create(any(Reading.class))).thenReturn(true);
-        ReaderService service = new ReaderService(readingRepo);
+        ReadingService service = new ReadingService(readingRepo);
 
         assertTrue("should borrow book got failed", service.borrowBook(user, book));
 
@@ -59,7 +58,7 @@ public class ReaderServiceTest {
         when(user.isAuthorized(Permission.RETURN_BOOK)).thenReturn(true);
         when(readingRepo.retrieve(user,book)).thenReturn(reading);
         when(readingRepo.save(any(Reading.class))).thenReturn(true);
-        ReaderService service = new ReaderService(readingRepo);
+        ReadingService service = new ReadingService(readingRepo);
 
         assertTrue("should return book failed", service.returnBook(user, book));
 
@@ -69,8 +68,4 @@ public class ReaderServiceTest {
 
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
 }

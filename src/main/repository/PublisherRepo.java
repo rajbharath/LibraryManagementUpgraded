@@ -27,7 +27,7 @@ public class PublisherRepo {
         return id;
     }
 
-    public int retrieveId(String publisherName) throws SQLException {
+    public int retrieveIdByPublisherName(String publisherName) throws SQLException {
         int id = -1;
         Statement statement = connection.createStatement();
         String sql = "select id from publisher where name='" + publisherName + "'";
@@ -38,7 +38,7 @@ public class PublisherRepo {
         return id;
     }
 
-    public Publisher retrieveById(int publisherId) throws SQLException {
+    public Publisher retrievePublisherById(int publisherId) throws SQLException {
         Statement statement = connection.createStatement();
         String sql = "select name from publisher where id=" + publisherId;
         ResultSet resultSet = statement.executeQuery(sql);

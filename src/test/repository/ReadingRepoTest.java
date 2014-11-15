@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Date;
+
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +44,7 @@ public class ReadingRepoTest {
         when(bookRepo.save(book)).thenReturn(true);
 
         ReadingRepo readingRepo = new ReadingRepo(baseDataSource, bookRepo);
-        assertTrue("should create Reading failed", readingRepo.create(new Reading(user, book)));
+        assertTrue("should create Reading failed", readingRepo.create(new Reading(user, book, new Date(System.currentTimeMillis()))));
     }
 
     @After

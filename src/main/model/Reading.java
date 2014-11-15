@@ -13,12 +13,11 @@ public class Reading {
     private Date borrowedDate;
     private Date dueDate;
     private Date returnedDate;
-    private String status;
 
-    public Reading(User user, Book book) {
+    public Reading(User user, Book book,Date borrowedDate) {
         this.user = user;
         this.book = book;
-        this.borrowedDate = new Date(System.currentTimeMillis());
+        this.borrowedDate = borrowedDate;
         this.dueDate = new Date(borrowedDate.getTime() + RENTAL_PERIOD);
     }
 
@@ -59,5 +58,14 @@ public class Reading {
 
     public String getBookName(){
         return book.getName();
+    }
+
+    public Date getReturnedDate() {
+        return returnedDate;
+    }
+
+
+    public void returnReading() {
+        returnedDate = new Date(System.currentTimeMillis());
     }
 }

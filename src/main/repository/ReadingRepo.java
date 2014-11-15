@@ -1,11 +1,10 @@
 package main.repository;
 
+import main.model.Book;
 import main.model.Reading;
+import main.model.User;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ReadingRepo {
 
@@ -28,6 +27,38 @@ public class ReadingRepo {
         preparedStatement.setDate(3, new Date(reading.getBorrowedDate().getTime()));
         preparedStatement.setDate(4, new Date(reading.getDueDate().getTime()));
         preparedStatement.setString(5, reading.getStatus());
+        resultCode &= preparedStatement.executeUpdate() > 0;
+        resultCode &= bookRepo.save(reading.getBook());
+        return resultCode;
+    }
+
+    public Reading retrieve(User user, Book book) throws SQLException {
+        String sql = "select username,bookname,borrowed_date,due_date,returned_date,status from reading where username =? and bookname=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, user.getUsername());
+        preparedStatement.setString(2, book.getName());
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        return buildReadingFromResultSet(resultSet, user);
+    }
+
+    private Reading buildReadingFromResultSet(ResultSet resultSet, User user) throws SQLException {
+        Reading reading = null;
+
+        if (resultSet.next()) {
+            Book book = bookRepo.retrieve(resultSet.getString("bookname"));
+            reading = new Reading(user, book, new java.util.Date(resultSet.getDate("borrowed_date").getTime()));
+        }
+        return reading;
+    }
+
+    public boolean save(Reading reading) throws SQLException {
+        boolean resultCode = true;
+        String sql = "update reading set returned_date=?,due_date=?,status=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setDate(1, new Date(reading.getReturnedDate().getTime()));
+        preparedStatement.setDate(2, new Date(reading.getDueDate().getTime()));
+        preparedStatement.setString(3, reading.getStatus());
         resultCode &= preparedStatement.executeUpdate() > 0;
         resultCode &= bookRepo.save(reading.getBook());
         return resultCode;

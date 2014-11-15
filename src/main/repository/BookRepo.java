@@ -53,6 +53,7 @@ public class BookRepo {
 
     private Book buildBookFromResultSet(ResultSet resultSet) throws SQLException {
         if (resultSet.next()) {
+
             String name = resultSet.getString("name");
             java.sql.Array sqlArray = resultSet.getArray("author_ids");
             Object obj = sqlArray.getArray();
@@ -105,7 +106,6 @@ public class BookRepo {
     }
 
     public boolean save(Book book) throws SQLException {
-
         Integer[] authorIds = populateAuthorIds(book.getAuthors());
         int publisherId = populatePublisherId(book.getPublisher());
         Array authorIdsSql = connection.createArrayOf("int", authorIds);
@@ -130,6 +130,14 @@ public class BookRepo {
             authorIdsSql.append(",");
         }
         return authorIdsSql.replace(authorIdsSql.length() - 1, authorIdsSql.length(), "").toString();
+    }
+
+    public Book retrieve(String bookname) throws SQLException {
+        String sql = "select name,author_ids,publisher_id,no_of_copies,issued_count from book where lower(name)=?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, bookname.toLowerCase());
+        ResultSet resultSet = statement.executeQuery();
+        return buildBookFromResultSet(resultSet);
     }
 }
 

@@ -33,6 +33,7 @@ public class BookTest {
         List<Author> authors = new ArrayList<>();
         authors.add(new Author("Martin"));
         Book book = new Book("refactoring", authors, new Publisher("Addison"), 1);
-        assertFalse("should Increase issued count.", book.increaseIssuedCountByOne());
+        book.increaseIssuedCountByOne();
+        assertFalse("should Increase issued count.", book.isAvailable());
     }
 }

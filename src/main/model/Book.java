@@ -73,14 +73,16 @@ public class Book {
         return totalnoOfCopies - issuedCount;
     }
 
-    public boolean increaseIssuedCountByOne(){
+    public void increaseIssuedCountByOne(){
         if(isAvailable())
             ++issuedCount;
-        return isAvailable();
     }
 
    public int getIssuedCount(){
        return issuedCount;
    }
 
+    public void decreaseIssuedCountByOne() {
+        --issuedCount;
+    }
 }

@@ -28,6 +28,9 @@ public class ReaderServiceTest {
     @Mock
     Book book;
 
+    @Mock
+    Reading reading;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -47,6 +50,23 @@ public class ReaderServiceTest {
         verify(book).isAvailable();
         verify(book).increaseIssuedCountByOne();
         verify(user).isAuthorized(Permission.BORROW_BOOK);
+    }
+
+    @Test
+    public void shouldReturnBook() throws Exception {
+        when(user.getUsername()).thenReturn("rajbharath").thenReturn("rajbharath").thenReturn("rajbharath");
+        when(book.getName()).thenReturn("P EAA").thenReturn("P EAA").thenReturn("P EAA");
+        when(user.isAuthorized(Permission.RETURN_BOOK)).thenReturn(true);
+        when(readingRepo.retrieve(user,book)).thenReturn(reading);
+        when(readingRepo.save(any(Reading.class))).thenReturn(true);
+        ReaderService service = new ReaderService(readingRepo);
+
+        assertTrue("should return book failed", service.returnBook(user, book));
+
+        verify(user).isAuthorized(Permission.RETURN_BOOK);
+        verify(book).decreaseIssuedCountByOne();
+        verify(reading).returnReading();
+
     }
 
     @After

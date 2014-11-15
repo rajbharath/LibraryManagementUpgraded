@@ -45,7 +45,7 @@ public class AdministrativeServiceTest {
         List<Author> authors = new ArrayList<>();
         authors.add(new Author("Martin Fowler"));
         authors.add(new Author("fowler"));
-        Book expectedBook = new Book("P EAA", authors, new Publisher("Addison-Wesly"), 5);
+        Book expectedBook = new Book("P EAA", authors, new Publisher("Addison-Wesly"), 5, 0);
 
         when(bookRepo.addBook(any(Book.class)))
                 .thenReturn(expectedBook);
@@ -53,7 +53,7 @@ public class AdministrativeServiceTest {
         when(user.isAuthorized(Permission.ADD_BOOK)).thenReturn(true);
         AdministrativeService service = new AdministrativeService(bookRepo);
 
-        Book book = service.addBook(user, "P EAA", Arrays.asList(new String[]{"Martin Fowler", "fowler"}), "Addison-Wesly", 5);
+        Book book = service.addBook(user, "P EAA", Arrays.asList(new String[]{"Martin Fowler", "fowler"}), "Addison-Wesly", 5,0);
         verify(user).isAuthorized(Permission.ADD_BOOK);
         assertEquals("Should Add Book Failed.", expectedBook, book);
     }
@@ -64,7 +64,7 @@ public class AdministrativeServiceTest {
         when(user.isAuthorized(Permission.REMOVE_BOOK)).thenReturn(true);
         when(bookRepo.delete(any(Book.class))).thenReturn(true);
         AdministrativeService service = new AdministrativeService(bookRepo);
-        boolean isDeleted = service.removeBook(user, new Book("Refactoring II", null, null, 0));
+        boolean isDeleted = service.removeBook(user, new Book("Refactoring II", null, null, 0, 0));
         assertTrue("should Delete Book Failed. Expected: true Got: False", isDeleted);
     }
 

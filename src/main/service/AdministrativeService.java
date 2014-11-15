@@ -14,7 +14,7 @@ public class AdministrativeService {
         this.bookRepo = bookRepo;
     }
 
-    public Book addBook(User user, String name, List<String> authorNames, String publisherName, int noOfCopies) throws Exception {
+    public Book addBook(User user, String name, List<String> authorNames, String publisherName, int noOfCopies,int issuedCount) throws Exception {
         if (!user.isAuthorized(Permission.ADD_BOOK)) throw new Exception("User Not Authorized");
         List<Author> authors = new ArrayList<>();
         for (String authorName : authorNames) {
@@ -22,7 +22,7 @@ public class AdministrativeService {
         }
         Publisher publisher = new Publisher(publisherName);
 
-        Book book = new Book(name, authors, publisher, noOfCopies);
+        Book book = new Book(name, authors, publisher, noOfCopies, issuedCount);
         return bookRepo.addBook(book);
 
     }

@@ -28,7 +28,7 @@ public class ReaderService {
     }
 
     public boolean returnBook(User user, Book book) throws Exception {
-        if (!user.isAuthorized(Permission.RETURN_BOOK)) throw new Exception("User not authorized to borrow book");
+        if (!user.isAuthorized(Permission.RETURN_BOOK)) throw new Exception("User not authorized to return book");
         Reading reading = readingRepo.retrieve(user, book);
         if (reading == null) throw new Exception("User currently has no reading on the given book");
         book.decreaseIssuedCountByOne();

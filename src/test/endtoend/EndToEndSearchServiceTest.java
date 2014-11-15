@@ -23,7 +23,7 @@ public class EndToEndSearchServiceTest {
 
         List<Book> books = service.searchBookByName("Ref");
         List<Book> expected = new ArrayList<>();
-        expected.add(new Book("Refactoring", null, null, 0));
+        expected.add(new Book("Refactoring", null, null, 0, 0));
         assertEquals("should retrieve Book . Expected: List of Books Got: " + books.get(0).getName(), books.get(0).getName(), expected.get(0).getName());
     }
 }

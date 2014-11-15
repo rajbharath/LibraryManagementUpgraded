@@ -50,8 +50,8 @@ public class EndToEndAdministrativeServiceTest {
         List<Author> authors = new ArrayList<>();
         authors.add(new Author("Martin Fowler"));
         authors.add(new Author("fowler"));
-        Book expectedBook = new Book("P EAAA", authors, new Publisher("Addison-Wesly"), 5);
-        Book book = service.addBook(user, "P EAAA", Arrays.asList(new String[]{"Martin Fowler", "fowler"}), "Addison-Wesly", 5);
+        Book expectedBook = new Book("P EAAA", authors, new Publisher("Addison-Wesly"), 5, 0);
+        Book book = service.addBook(user, "P EAAA", Arrays.asList(new String[]{"Martin Fowler", "fowler"}), "Addison-Wesly", 5,0);
         assertTrue("end To End Should Add Book With Valid Book Details failed", expectedBook.toString().equals(book.toString()));
     }
 

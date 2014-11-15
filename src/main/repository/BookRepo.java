@@ -21,15 +21,18 @@ public class BookRepo {
     }
 
     public Book addBook(Book book) throws SQLException {
-        Statement statement = connection.createStatement();
 
         Integer[] authorIds = populateAuthorIds(book.getAuthors());
         int publisherId = populatePublisherId(book.getPublisher());
-        String authorIdsSql = getSqlFormattedAuthorIds(authorIds);
 
-        String sql = "insert into book(name,author_ids,publisher_id,no_of_copies) values('" + book.getName() + "',ARRAY[" + authorIdsSql + "]," + publisherId + "," + book.getTotalNoOfCopies() + ")";
-        statement.executeUpdate(sql);
-
+        String sql = "insert into book(name,author_ids,publisher_id,no_of_copies,issued_count) values(?,?,?,?,?)";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, book.getName());
+        statement.setArray(2, connection.createArrayOf("int", authorIds));
+        statement.setInt(3, publisherId);
+        statement.setInt(4, book.getTotalNoOfCopies());
+        statement.setInt(5, book.getIssuedCount());
+        statement.executeUpdate();
         return book;
     }
 
@@ -42,32 +45,29 @@ public class BookRepo {
 
     public List<Book> searchBookByName(String name) throws SQLException {
         Statement statement = connection.createStatement();
-        String sql = "select name,author_ids,publisher_id,no_of_copies from book where lower(name) like'%" + name.toLowerCase() + "%'";
+
+        String sql = "select name,author_ids,publisher_id,no_of_copies,issued_count from book where lower(name) like'%" + name.toLowerCase() + "%'";
+
         ResultSet resultSet = statement.executeQuery(sql);
         List<Book> books = new ArrayList<>();
-        while (!resultSet.isAfterLast()) {
+        while (resultSet.next()) {
             books.add(buildBookFromResultSet(resultSet));
         }
         return books;
     }
 
     private Book buildBookFromResultSet(ResultSet resultSet) throws SQLException {
-        if (resultSet.next()) {
+        String name = resultSet.getString("name");
+        java.sql.Array sqlArray = resultSet.getArray("author_ids");
+        Object obj = sqlArray.getArray();
+        int noOfCopies = resultSet.getInt("no_of_copies");
 
-            String name = resultSet.getString("name");
-            java.sql.Array sqlArray = resultSet.getArray("author_ids");
-            Object obj = sqlArray.getArray();
-            int noOfCopies = resultSet.getInt("no_of_copies");
-
-            Integer[] authorIds = (Integer[]) obj;
-            int publisherId = resultSet.getInt("publisher_id");
-            List<Author> authors = populateAuthors(authorIds);
-            Publisher publisher = populatePublisher(publisherId);
-
-            return new Book(name, authors, publisher, noOfCopies);
-
-        }
-        return null;
+        Integer[] authorIds = (Integer[]) obj;
+        int publisherId = resultSet.getInt("publisher_id");
+        List<Author> authors = populateAuthors(authorIds);
+        Publisher publisher = populatePublisher(publisherId);
+        int issuedCount = resultSet.getInt("issued_count");
+        return new Book(name, authors, publisher, noOfCopies, issuedCount);
     }
 
     private int populatePublisherId(Publisher publisher) throws SQLException {
@@ -111,13 +111,14 @@ public class BookRepo {
         Array authorIdsSql = connection.createArrayOf("int", authorIds);
 
 
-        String sql = "update book set author_ids=? , publisher_id=?,no_of_copies=?,issued_count=?";
+        String sql = "update book set author_ids=? , publisher_id=?,no_of_copies=?,issued_count=? where name=?";
         PreparedStatement statement = connection.prepareStatement(sql);
 
         statement.setArray(1, authorIdsSql);
         statement.setInt(2, publisherId);
         statement.setInt(3, book.getTotalNoOfCopies());
         statement.setInt(4, book.getIssuedCount());
+        statement.setString(5, book.getName());
 
         return statement.executeUpdate() > 0;
     }
@@ -137,7 +138,9 @@ public class BookRepo {
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, bookname.toLowerCase());
         ResultSet resultSet = statement.executeQuery();
-        return buildBookFromResultSet(resultSet);
+        if (resultSet.next())
+            return buildBookFromResultSet(resultSet);
+        return null;
     }
 }
 

@@ -10,11 +10,12 @@ public class Book {
     private List<Author> authors;
     private Publisher publisher;
 
-    public Book(String name, List<Author> authors, Publisher publisher, int noOfCopies) {
+    public Book(String name, List<Author> authors, Publisher publisher, int noOfCopies, int issuedCount) {
         this.name = name;
         this.totalnoOfCopies = noOfCopies;
         this.authors = authors;
         this.publisher = publisher;
+        this.issuedCount = issuedCount;
     }
 
     @Override
@@ -73,14 +74,14 @@ public class Book {
         return totalnoOfCopies - issuedCount;
     }
 
-    public void increaseIssuedCountByOne(){
-        if(isAvailable())
+    public void increaseIssuedCountByOne() {
+        if (isAvailable())
             ++issuedCount;
     }
 
-   public int getIssuedCount(){
-       return issuedCount;
-   }
+    public int getIssuedCount() {
+        return issuedCount;
+    }
 
     public void decreaseIssuedCountByOne() {
         --issuedCount;

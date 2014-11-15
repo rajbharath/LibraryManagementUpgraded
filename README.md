@@ -1,11 +1,13 @@
 This is a library management system with following pieces of functionality.
 ========================================================================================================================
-    -user authentication
-    -add a book to library
-    -remove a book from library
-    -borrow a book
-    -returning the borrowed book
-    -searching the book by its name
+
+    - user authentication
+    - add a book to library
+    - remove a book from library
+    - borrow a book
+    - returning the borrowed book
+    - searching the book by its name
+
 
 The below services are built as part of this system
 

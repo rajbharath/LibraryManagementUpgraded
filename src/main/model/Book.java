@@ -18,15 +18,23 @@ public class Book {
         this.issuedCount = issuedCount;
     }
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "name='" + name + '\'' +
-                ", remainingCopies=" + getRemainingCount() +
-                ", authors=" + authors.stream().map(a -> a.getName()).collect(Collectors.joining(",")) +
-                ", publisher=" + publisher.getName() +
-                '}';
+    public boolean isAvailable() {
+        return getRemainingCount() > 0;
     }
+
+    private int getRemainingCount() {
+        return totalNoOfCopies - issuedCount;
+    }
+
+    public void increaseIssuedCountByOne() {
+        if (isAvailable())
+            ++issuedCount;
+    }
+
+    public void decreaseIssuedCountByOne() {
+        --issuedCount;
+    }
+
 
     public String getName() {
         return name;
@@ -42,6 +50,10 @@ public class Book {
 
     public Publisher getPublisher() {
         return publisher;
+    }
+
+    public int getIssuedCount() {
+        return issuedCount;
     }
 
     @Override
@@ -66,24 +78,15 @@ public class Book {
         return result;
     }
 
-    public boolean isAvailable() {
-        return getRemainingCount() > 0;
+    @Override
+    public String toString() {
+        return "Book{" +
+                "name='" + name + '\'' +
+                ", remainingCopies=" + getRemainingCount() +
+                ", authors=" + authors.stream().map(a -> a.getName()).collect(Collectors.joining(",")) +
+                ", publisher=" + publisher.getName() +
+                '}';
     }
 
-    private int getRemainingCount() {
-        return totalNoOfCopies - issuedCount;
-    }
 
-    public void increaseIssuedCountByOne() {
-        if (isAvailable())
-            ++issuedCount;
-    }
-
-    public int getIssuedCount() {
-        return issuedCount;
-    }
-
-    public void decreaseIssuedCountByOne() {
-        --issuedCount;
-    }
 }

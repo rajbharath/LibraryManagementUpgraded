@@ -14,11 +14,52 @@ public class Reading {
     private Date dueDate;
     private Date returnedDate;
 
-    public Reading(User user, Book book,Date borrowedDate) {
+    public Reading(User user, Book book, Date borrowedDate) {
         this.user = user;
         this.book = book;
         this.borrowedDate = borrowedDate;
         this.dueDate = new Date(borrowedDate.getTime() + RENTAL_PERIOD);
+    }
+
+
+    public void returnReading() {
+        returnedDate = new Date(System.currentTimeMillis());
+    }
+
+    public String getStatus() {
+        if (returnedDate != null) return RETURNED;
+        if (dueDate.getTime() >= System.currentTimeMillis()) return EFFECTIVE;
+        return OVER_DUE;
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+
+    public Date getBorrowedDate() {
+        return borrowedDate;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public String getUsername() {
+        return user.getUsername();
+    }
+
+    public String getBookName() {
+        return book.getName();
+    }
+
+    public Date getReturnedDate() {
+        return returnedDate;
     }
 
     @Override
@@ -30,42 +71,4 @@ public class Reading {
                 '}';
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public String getStatus() {
-        if (returnedDate != null) return RETURNED;
-        if (dueDate.getTime() >= System.currentTimeMillis()) return EFFECTIVE;
-        return OVER_DUE;
-    }
-
-    public Date getBorrowedDate() {
-        return borrowedDate;
-    }
-
-    public Date getDueDate() {
-        return dueDate;
-    }
-
-    public String getUsername(){
-        return user.getUsername();
-    }
-
-    public String getBookName(){
-        return book.getName();
-    }
-
-    public Date getReturnedDate() {
-        return returnedDate;
-    }
-
-
-    public void returnReading() {
-        returnedDate = new Date(System.currentTimeMillis());
-    }
 }

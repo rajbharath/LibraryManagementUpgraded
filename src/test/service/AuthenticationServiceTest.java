@@ -26,7 +26,7 @@ public class AuthenticationServiceTest {
 
     @Test
     public void authenticateValidCredentials() throws Exception {
-        when(userRepo.retrieve("rbrajbharath", "123456")).thenReturn(new User("rbrajbharath", permissions));
+        when(userRepo.findByUsernameAndPassword("rbrajbharath", "123456")).thenReturn(new User("rbrajbharath", permissions));
         AuthenticationService service = new AuthenticationService(userRepo);
         User user = service.authenticate("rbrajbharath", "123456");
         assertEquals(new User("rbrajbharath", permissions), user);
@@ -34,14 +34,14 @@ public class AuthenticationServiceTest {
 
     @Test(expected = Exception.class)
     public void returnNullForInvalidCredentials() throws Exception {
-        when(userRepo.retrieve("invalidusername", "invalidpassword")).thenThrow(new Exception("User not found"));
+        when(userRepo.findByUsernameAndPassword("invalidusername", "invalidpassword")).thenThrow(new Exception("User not found"));
         AuthenticationService service = new AuthenticationService(userRepo);
         service.authenticate("invalidusername", "invalidpassword");
     }
 
     @Test(expected = Exception.class)
     public void exceptionForMissingCredentials() throws Exception {
-        when(userRepo.retrieve("", "")).thenThrow(new Exception());
+        when(userRepo.findByUsernameAndPassword("", "")).thenThrow(new Exception());
         AuthenticationService service = new AuthenticationService(userRepo);
         service.authenticate("", "");
     }

@@ -41,10 +41,10 @@ public class ReadingRepoTest {
     public void shouldCreateReading() throws Exception {
         when(user.getUsername()).thenReturn("rajbharath");
         when(book.getName()).thenReturn("Refactoring");
-        when(bookRepo.save(book)).thenReturn(true);
+        when(bookRepo.update(book)).thenReturn(true);
 
         ReadingRepo readingRepo = new ReadingRepo(baseDataSource, bookRepo);
-        assertTrue("should create Reading failed", readingRepo.create(new Reading(user, book, new Date(System.currentTimeMillis()))));
+        assertTrue("should update Reading failed", readingRepo.save(new Reading(user, book, new Date(System.currentTimeMillis()))));
     }
 
     @After

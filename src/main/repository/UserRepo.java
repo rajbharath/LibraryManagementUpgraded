@@ -17,7 +17,7 @@ public class UserRepo {
         connection = dataSource.getConnection();
     }
 
-    public User retrieve(String username, String password) {
+    public User findByUsernameAndPassword(String username, String password) {
         ResultSet resultSet = null;
         try {
             Statement statement = connection.createStatement();

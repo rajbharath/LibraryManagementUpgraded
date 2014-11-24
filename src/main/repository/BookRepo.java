@@ -20,7 +20,7 @@ public class BookRepo {
         this.authorRepo = authorRepo;
     }
 
-    public Book addBook(Book book) throws SQLException {
+    public Book save(Book book) throws SQLException {
 
         Integer[] authorIds = populateAuthorIds(book.getAuthors());
         int publisherId = populatePublisherId(book.getPublisher());
@@ -36,6 +36,23 @@ public class BookRepo {
         return book;
     }
 
+    public boolean update(Book book) throws SQLException {
+        Integer[] authorIds = populateAuthorIds(book.getAuthors());
+        int publisherId = populatePublisherId(book.getPublisher());
+        Array authorIdsSql = connection.createArrayOf("int", authorIds);
+
+        String sql = "update book set author_ids=? , publisher_id=?,no_of_copies=?,issued_count=? where lower(name)=?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setArray(1, authorIdsSql);
+        statement.setInt(2, publisherId);
+        statement.setInt(3, book.getTotalNoOfCopies());
+        statement.setInt(4, book.getIssuedCount());
+        statement.setString(5, book.getName().toLowerCase());
+
+        return statement.executeUpdate() > 0;
+    }
+
     public boolean delete(Book book) throws SQLException {
         Statement statement = connection.createStatement();
         String sql = "delete from book where name='" + book.getName() + "'";
@@ -43,7 +60,17 @@ public class BookRepo {
         return returnCode == 1;
     }
 
-    public List<Book> searchBookByName(String name) throws SQLException {
+    public Book findByName(String bookname) throws SQLException {
+        String sql = "select name,author_ids,publisher_id,no_of_copies,issued_count from book where lower(name)=?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, bookname.toLowerCase());
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next())
+            return buildBookFromResultSet(resultSet);
+        return null;
+    }
+
+    public List<Book> findBooksByName(String name) throws SQLException {
         Statement statement = connection.createStatement();
 
         String sql = "select name,author_ids,publisher_id,no_of_copies,issued_count from book where lower(name) like'%" + name.toLowerCase() + "%'";
@@ -71,9 +98,9 @@ public class BookRepo {
     }
 
     private int populatePublisherId(Publisher publisher) throws SQLException {
-        int publisherId = publisherRepo.retrieveIdByPublisherName(publisher.getName());
+        int publisherId = publisherRepo.findIdByName(publisher.getName());
         if (publisherId == -1)
-            publisherId = publisherRepo.create(publisher.getName());
+            publisherId = publisherRepo.save(publisher.getName());
         return publisherId;
     }
 
@@ -82,11 +109,11 @@ public class BookRepo {
         Integer[] authorIds = new Integer[authorNames.size()];
         int i = 0;
         for (String authorName : authorNames) {
-            int id = authorRepo.retrieveIdByAuthorName(authorName);
+            int id = authorRepo.findIdByName(authorName);
             if (id != -1)
                 authorIds[i] = id;
             else
-                authorIds[i] = authorRepo.create(authorName);
+                authorIds[i] = authorRepo.save(authorName);
             i++;
         }
         return authorIds;
@@ -95,51 +122,16 @@ public class BookRepo {
     private List<Author> populateAuthors(Integer[] authorIds) throws SQLException {
         List<Author> authors = new ArrayList<>();
         for (Integer authorId : authorIds) {
-            authors.add(authorRepo.retrieveAuthorById(authorId));
+            authors.add(authorRepo.findById(authorId));
 
         }
         return authors;
     }
 
     private Publisher populatePublisher(int publisherId) throws SQLException {
-        return publisherRepo.retrievePublisherById(publisherId);
+        return publisherRepo.findById(publisherId);
     }
 
-    public boolean save(Book book) throws SQLException {
-        Integer[] authorIds = populateAuthorIds(book.getAuthors());
-        int publisherId = populatePublisherId(book.getPublisher());
-        Array authorIdsSql = connection.createArrayOf("int", authorIds);
 
-        String sql = "update book set author_ids=? , publisher_id=?,no_of_copies=?,issued_count=? where lower(name)=?";
-        PreparedStatement statement = connection.prepareStatement(sql);
-
-        statement.setArray(1, authorIdsSql);
-        statement.setInt(2, publisherId);
-        statement.setInt(3, book.getTotalNoOfCopies());
-        statement.setInt(4, book.getIssuedCount());
-        statement.setString(5, book.getName().toLowerCase());
-
-        return statement.executeUpdate() > 0;
-    }
-
-    private String getSqlFormattedAuthorIds(Integer[] authorIds) {
-
-        StringBuilder authorIdsSql = new StringBuilder("");
-        for (int authorId : authorIds) {
-            authorIdsSql.append(authorId);
-            authorIdsSql.append(",");
-        }
-        return authorIdsSql.replace(authorIdsSql.length() - 1, authorIdsSql.length(), "").toString();
-    }
-
-    public Book retrieve(String bookname) throws SQLException {
-        String sql = "select name,author_ids,publisher_id,no_of_copies,issued_count from book where lower(name)=?";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setString(1, bookname.toLowerCase());
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next())
-            return buildBookFromResultSet(resultSet);
-        return null;
-    }
 }
 

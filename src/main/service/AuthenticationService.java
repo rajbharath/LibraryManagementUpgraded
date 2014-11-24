@@ -21,7 +21,7 @@ public class AuthenticationService {
         if (password == null || password.length() == 0) {
             throw new Exception("Password should be entered");
         }
-        User user = userRepo.retrieve(username, password);
+        User user = userRepo.findByUsernameAndPassword(username, password);
 
         if (user == null) throw new Exception("User not found");
 

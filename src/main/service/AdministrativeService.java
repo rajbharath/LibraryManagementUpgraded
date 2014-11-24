@@ -23,7 +23,7 @@ public class AdministrativeService {
         Publisher publisher = new Publisher(publisherName);
 
         Book book = new Book(name, authors, publisher, noOfCopies, issuedCount);
-        return bookRepo.addBook(book);
+        return bookRepo.save(book);
 
     }
 

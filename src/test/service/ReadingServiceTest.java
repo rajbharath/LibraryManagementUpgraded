@@ -41,7 +41,7 @@ public class ReadingServiceTest {
         when(book.getName()).thenReturn("P EAA");
         when(book.isAvailable()).thenReturn(true);
         when(user.isAuthorized(Permission.BORROW_BOOK)).thenReturn(true);
-        when(readingRepo.create(any(Reading.class))).thenReturn(true);
+        when(readingRepo.save(any(Reading.class))).thenReturn(true);
         ReadingService service = new ReadingService(readingRepo);
 
         assertTrue("should borrow book got failed", service.borrowBook(user, book));
@@ -56,8 +56,8 @@ public class ReadingServiceTest {
         when(user.getUsername()).thenReturn("rajbharath").thenReturn("rajbharath").thenReturn("rajbharath");
         when(book.getName()).thenReturn("P EAA").thenReturn("P EAA").thenReturn("P EAA");
         when(user.isAuthorized(Permission.RETURN_BOOK)).thenReturn(true);
-        when(readingRepo.retrieve(user,book)).thenReturn(reading);
-        when(readingRepo.save(any(Reading.class))).thenReturn(true);
+        when(readingRepo.findByUserAndBook(user, book)).thenReturn(reading);
+        when(readingRepo.update(any(Reading.class))).thenReturn(true);
         ReadingService service = new ReadingService(readingRepo);
 
         assertTrue("should return book failed", service.returnBook(user, book));

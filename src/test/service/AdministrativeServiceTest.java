@@ -47,7 +47,7 @@ public class AdministrativeServiceTest {
         authors.add(new Author("fowler"));
         Book expectedBook = new Book("P EAA", authors, new Publisher("Addison-Wesly"), 5, 0);
 
-        when(bookRepo.addBook(any(Book.class)))
+        when(bookRepo.save(any(Book.class)))
                 .thenReturn(expectedBook);
 
         when(user.isAuthorized(Permission.ADD_BOOK)).thenReturn(true);

@@ -15,7 +15,7 @@ public class AuthorRepo {
         connection = dataSource.getConnection();
     }
 
-    public int create(String author) throws SQLException {
+    public int save(String author) throws SQLException {
         Statement statement = connection.createStatement();
         int id = -1;
         String sql = "insert into author(name) values('" + author + "')";
@@ -28,7 +28,7 @@ public class AuthorRepo {
         return id;
     }
 
-    public int retrieveIdByAuthorName(String authorName) throws SQLException {
+    public int findIdByName(String authorName) throws SQLException {
         Statement statement = connection.createStatement();
         String sql = "select id from author where name='" + authorName + "'";
         ResultSet resultSet = statement.executeQuery(sql);
@@ -39,7 +39,7 @@ public class AuthorRepo {
         return id;
     }
 
-    public Author retrieveAuthorById(Integer authorId) throws SQLException {
+    public Author findById(Integer authorId) throws SQLException {
         Statement statement = connection.createStatement();
         String sql = "select name from author where id=" + authorId;
         ResultSet resultSet = statement.executeQuery(sql);

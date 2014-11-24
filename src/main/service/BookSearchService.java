@@ -14,6 +14,6 @@ public class BookSearchService {
     }
 
     public List<Book> searchBookByName(String name) throws SQLException {
-        return bookRepo.searchBookByName(name);
+        return bookRepo.findBooksByName(name);
     }
 }

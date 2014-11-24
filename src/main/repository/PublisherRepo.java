@@ -14,7 +14,7 @@ public class PublisherRepo {
         connection = dataSource.getConnection();
     }
 
-    public int create(String publisherName) throws SQLException {
+    public int save(String publisherName) throws SQLException {
         Statement statement = connection.createStatement();
         int id = -1;
         String sql = "insert into publisher(name) values('" + publisherName + "')";
@@ -27,7 +27,7 @@ public class PublisherRepo {
         return id;
     }
 
-    public int retrieveIdByPublisherName(String publisherName) throws SQLException {
+    public int findIdByName(String publisherName) throws SQLException {
         int id = -1;
         Statement statement = connection.createStatement();
         String sql = "select id from publisher where name='" + publisherName + "'";
@@ -38,7 +38,7 @@ public class PublisherRepo {
         return id;
     }
 
-    public Publisher retrievePublisherById(int publisherId) throws SQLException {
+    public Publisher findById(int publisherId) throws SQLException {
         Statement statement = connection.createStatement();
         String sql = "select name from publisher where id=" + publisherId;
         ResultSet resultSet = statement.executeQuery(sql);
@@ -48,4 +48,6 @@ public class PublisherRepo {
         }
         return null;
     }
+
+
 }

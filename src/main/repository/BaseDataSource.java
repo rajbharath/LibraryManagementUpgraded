@@ -19,28 +19,12 @@ public class BaseDataSource {
         this.dbPassword = dbPassword;
     }
 
-    public String getDbDriver() {
-        return dbDriver;
-    }
-
-    public String getDbUrl() {
-        return dbUrl;
-    }
-
-    public String getDbUser() {
-        return dbUser;
-    }
-
-    public String getDbPassword() {
-        return dbPassword;
-    }
-
     public Connection getConnection() throws ClassNotFoundException, SQLException {
 
-        Class.forName(getDbDriver());
+        Class.forName(dbDriver);
         connection = DriverManager
-                .getConnection(getDbUrl(),
-                        getDbUser(), getDbPassword());
+                .getConnection(dbUrl,
+                        dbUser, dbPassword);
         connection.setAutoCommit(autoCommit);
         return connection;
     }

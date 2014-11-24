@@ -18,7 +18,7 @@ public class ReadingRepo {
         this.bookRepo = bookRepo;
     }
 
-    public boolean create(Reading reading) throws Exception {
+    public boolean save(Reading reading) throws Exception {
         boolean resultCode = true;
         String sql = "insert into reading(username,bookname,borrowed_date,due_date,status) values(?,?,?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -28,11 +28,23 @@ public class ReadingRepo {
         preparedStatement.setDate(4, new Date(reading.getDueDate().getTime()));
         preparedStatement.setString(5, reading.getStatus());
         resultCode &= preparedStatement.executeUpdate() > 0;
-        resultCode &= bookRepo.save(reading.getBook());
+        resultCode &= bookRepo.update(reading.getBook());
         return resultCode;
     }
 
-    public Reading retrieve(User user, Book book) throws SQLException {
+    public boolean update(Reading reading) throws SQLException {
+        boolean resultCode = true;
+        String sql = "update reading set returned_date=?,due_date=?,status=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setDate(1, new Date(reading.getReturnedDate().getTime()));
+        preparedStatement.setDate(2, new Date(reading.getDueDate().getTime()));
+        preparedStatement.setString(3, reading.getStatus());
+        resultCode &= preparedStatement.executeUpdate() > 0;
+        resultCode &= bookRepo.update(reading.getBook());
+        return resultCode;
+    }
+
+    public Reading findByUserAndBook(User user, Book book) throws SQLException {
         String sql = "select username,bookname,borrowed_date,due_date,returned_date,status from reading where username =? and bookname=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, user.getUsername());
@@ -46,21 +58,9 @@ public class ReadingRepo {
         Reading reading = null;
 
         if (resultSet.next()) {
-            Book book = bookRepo.retrieve(resultSet.getString("bookname"));
+            Book book = bookRepo.findByName(resultSet.getString("bookname"));
             reading = new Reading(user, book, new java.util.Date(resultSet.getDate("borrowed_date").getTime()));
         }
         return reading;
-    }
-
-    public boolean save(Reading reading) throws SQLException {
-        boolean resultCode = true;
-        String sql = "update reading set returned_date=?,due_date=?,status=?";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setDate(1, new Date(reading.getReturnedDate().getTime()));
-        preparedStatement.setDate(2, new Date(reading.getDueDate().getTime()));
-        preparedStatement.setString(3, reading.getStatus());
-        resultCode &= preparedStatement.executeUpdate() > 0;
-        resultCode &= bookRepo.save(reading.getBook());
-        return resultCode;
     }
 }

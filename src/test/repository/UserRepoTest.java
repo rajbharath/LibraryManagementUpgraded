@@ -50,7 +50,7 @@ public class UserRepoTest {
         when(permissionArray.getArray()).thenReturn(new Integer[]{1});
 
         UserRepo userRepo = new UserRepo(baseDataSource);
-        User user = userRepo.retrieve("rbrajbharath", "123456");
+        User user = userRepo.findByUsernameAndPassword("rbrajbharath", "123456");
         List<Permission> permissions = new ArrayList<Permission>();
         permissions.add(Permission.valueOf(1));
         assertEquals(new User("rbrajbharath", permissions), user);
@@ -65,7 +65,7 @@ public class UserRepoTest {
         when(resultSet.next()).thenReturn(false);
 
         UserRepo userRepo = new UserRepo(baseDataSource);
-        User user = userRepo.retrieve("rbrajbharath", "123456");
+        User user = userRepo.findByUsernameAndPassword("rbrajbharath", "123456");
         assertNull(user);
     }
 }

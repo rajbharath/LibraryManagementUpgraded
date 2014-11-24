@@ -24,15 +24,15 @@ public class ReadingService {
 
         Reading reading = new Reading(user, book, new Date(System.currentTimeMillis()));
         book.increaseIssuedCountByOne();
-        return readingRepo.create(reading);
+        return readingRepo.save(reading);
     }
 
     public boolean returnBook(User user, Book book) throws Exception {
         if (!user.isAuthorized(Permission.RETURN_BOOK)) throw new Exception("User not authorized to return book");
-        Reading reading = readingRepo.retrieve(user, book);
+        Reading reading = readingRepo.findByUserAndBook(user, book);
         if (reading == null) throw new Exception("User currently has no reading on the given book");
         book.decreaseIssuedCountByOne();
         reading.returnReading();
-        return readingRepo.save(reading);
+        return readingRepo.update(reading);
     }
 }

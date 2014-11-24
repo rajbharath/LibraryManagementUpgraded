@@ -17,6 +17,7 @@ public class BookRepo {
     public BookRepo(BaseDataSource dataSource, PublisherRepo publisherRepo, AuthorRepo authorRepo) throws SQLException, ClassNotFoundException {
         connection = dataSource.getConnection();
         this.publisherRepo = publisherRepo;
+
         this.authorRepo = authorRepo;
     }
 

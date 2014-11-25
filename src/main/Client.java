@@ -156,6 +156,8 @@ public class Client {
             selectedBook = books.get(bookIndex - 1);
         } catch (SQLException e) {
             IOUtil.println(e.getMessage());
+        } catch (Exception e) {
+            IOUtil.println(e.getMessage());
         }
     }
 

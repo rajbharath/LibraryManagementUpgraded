@@ -25,7 +25,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void authenticateValidCredentials() throws Exception {
+    public void shouldReturnUserForValidCredentials() throws Exception {
         when(userRepo.findByUsernameAndPassword("rbrajbharath", "123456")).thenReturn(new User("rbrajbharath", permissions));
         AuthenticationService service = new AuthenticationService(userRepo);
         User user = service.authenticate("rbrajbharath", "123456");
@@ -33,17 +33,31 @@ public class AuthenticationServiceTest {
     }
 
     @Test(expected = Exception.class)
-    public void returnNullForInvalidCredentials() throws Exception {
+    public void shouldReturnNullForInvalidCredentials() throws Exception {
         when(userRepo.findByUsernameAndPassword("invalidusername", "invalidpassword")).thenThrow(new Exception("User not found"));
         AuthenticationService service = new AuthenticationService(userRepo);
         service.authenticate("invalidusername", "invalidpassword");
     }
 
     @Test(expected = Exception.class)
-    public void exceptionForMissingCredentials() throws Exception {
+    public void shouldThrowExceptionUsernameAndPasswordSpaces() throws Exception {
         when(userRepo.findByUsernameAndPassword("", "")).thenThrow(new Exception());
         AuthenticationService service = new AuthenticationService(userRepo);
         service.authenticate("", "");
+    }
+
+    @Test(expected = Exception.class)
+    public void shouldThrowExceptionUsernameSpaces() throws Exception {
+        when(userRepo.findByUsernameAndPassword("", "123456")).thenThrow(new Exception());
+        AuthenticationService service = new AuthenticationService(userRepo);
+        service.authenticate("", "123465");
+    }
+
+    @Test(expected = Exception.class)
+    public void shouldThrowExceptionPasswordSpaces() throws Exception {
+        when(userRepo.findByUsernameAndPassword("rbrajbharath", "")).thenThrow(new Exception());
+        AuthenticationService service = new AuthenticationService(userRepo);
+        service.authenticate("rbrajbharath", "");
     }
 
 

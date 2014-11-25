@@ -16,7 +16,7 @@ public class BookTest {
     public void shouldBeAvailable() throws Exception {
         List<Author> authors = new ArrayList<>();
         authors.add(new Author("Martin"));
-        Book book = new Book("refactoring", authors, new Publisher("Addison"), 5, 0);
+        Book book = new Book("refactoring", authors, new Publisher("Addison"), 5);
         assertTrue("should be available failed", book.isAvailable());
     }
 
@@ -24,7 +24,7 @@ public class BookTest {
     public void shouldNotBeAvailable() {
         List<Author> authors = new ArrayList<>();
         authors.add(new Author("Martin"));
-        Book book = new Book("refactoring", authors, new Publisher("Addison"), 0, 0);
+        Book book = new Book("refactoring", authors, new Publisher("Addison"), 0);
         assertFalse("should be available failed", book.isAvailable());
     }
 
@@ -32,7 +32,7 @@ public class BookTest {
     public void shouldIncreaseIssuedCount() {
         List<Author> authors = new ArrayList<>();
         authors.add(new Author("Martin"));
-        Book book = new Book("refactoring", authors, new Publisher("Addison"), 1, 0);
+        Book book = new Book("refactoring", authors, new Publisher("Addison"), 1);
         book.increaseIssuedCountByOne();
         assertFalse("should Increase issued count.", book.isAvailable());
     }

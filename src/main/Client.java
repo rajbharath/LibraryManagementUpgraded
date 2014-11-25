@@ -204,8 +204,6 @@ public class Client {
         String publisherName = IOUtil.readLine();
         IOUtil.println("Enter the no of copies");
         int noOfCopies = IOUtil.readInt();
-        IOUtil.println("Enter the issued count");
-        int issuedCount = IOUtil.readInt();
         IOUtil.println("Enter the authors' name(s). To stop giving the author names type: stop");
 
         List<String> authorNames = new ArrayList<>();
@@ -215,7 +213,7 @@ public class Client {
             authorName = IOUtil.readLine();
         }
         try {
-            administrativeService.addBook(currentUser, bookName, authorNames, publisherName, noOfCopies, issuedCount);
+            administrativeService.addBook(currentUser, bookName, authorNames, publisherName, noOfCopies);
         } catch (Exception e) {
             IOUtil.println(e.getMessage());
         }

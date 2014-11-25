@@ -10,12 +10,11 @@ public class Book {
     private List<Author> authors;
     private Publisher publisher;
 
-    public Book(String name, List<Author> authors, Publisher publisher, int noOfCopies, int issuedCount) {
+    public Book(String name, List<Author> authors, Publisher publisher, int noOfCopies) {
         this.name = name;
         this.totalNoOfCopies = noOfCopies;
         this.authors = authors;
         this.publisher = publisher;
-        this.issuedCount = issuedCount;
     }
 
     public boolean isAvailable() {

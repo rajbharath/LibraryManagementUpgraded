@@ -94,7 +94,7 @@ public class BookRepo {
         List<Author> authors = populateAuthors(authorIds);
         Publisher publisher = populatePublisher(publisherId);
         int issuedCount = resultSet.getInt("issued_count");
-        return new Book(name, authors, publisher, noOfCopies, issuedCount);
+        return new Book(name, authors, publisher, noOfCopies);
     }
 
     private int populatePublisherId(Publisher publisher) throws SQLException {

@@ -33,7 +33,7 @@ public class EndToEndReadingServiceTest {
         MockitoAnnotations.initMocks(this);
         List<Author> authors = new ArrayList<>();
         authors.add(new Author("Martin"));
-        book = new Book("refactoring", authors, new Publisher("Addison"), 5, 2);
+        book = new Book("refactoring", authors, new Publisher("Addison"), 5);
     }
 
     @Test

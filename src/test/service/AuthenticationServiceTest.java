@@ -33,7 +33,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldReturnNullForInvalidCredentials() throws Exception {
+    public void shouldThrowExceptionForInvalidCredentials() throws Exception {
         when(userRepo.findByUsernameAndPassword("invalidusername", "invalidpassword")).thenThrow(new Exception("User not found"));
         AuthenticationService service = new AuthenticationService(userRepo);
         service.authenticate("invalidusername", "invalidpassword");

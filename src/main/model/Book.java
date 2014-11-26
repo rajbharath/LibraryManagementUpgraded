@@ -21,16 +21,17 @@ public class Book {
         return getRemainingCount() > 0;
     }
 
-    private int getRemainingCount() {
+    public int getRemainingCount() {
         return totalNoOfCopies - issuedCount;
     }
 
-    public void increaseIssuedCountByOne() {
-        if (isAvailable())
-            ++issuedCount;
+    public void increaseIssuedCountByOne() throws Exception {
+        if (!isAvailable()) throw new Exception("Book is not available");
+        ++issuedCount;
     }
 
-    public void decreaseIssuedCountByOne() {
+    public void decreaseIssuedCountByOne() throws Exception {
+        if (issuedCount == 0) throw new Exception("All of the copies are already available");
         --issuedCount;
     }
 
